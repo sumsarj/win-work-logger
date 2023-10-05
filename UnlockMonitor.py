@@ -12,6 +12,11 @@ import re
 
 import sys
 import getopt
+import pyuac
+
+if not pyuac.isUserAdmin():
+    print("Re-launching as admin!")
+    sys.exit(pyuac.runAsAdmin())
 
 debugLogging=False
 def printDebug(*args):
