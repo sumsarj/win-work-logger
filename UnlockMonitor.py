@@ -1,15 +1,7 @@
 import win32evtlog
-
-import win32evtlogutil
-
-import win32con
-
 import winerror
-
 import time
-
 import re
-
 import sys
 import getopt
 import pyuac
@@ -53,6 +45,9 @@ def date2sec(evt_date, format = "%m/%d/%Y %H:%M:%S"):
 
         reg_result=regexp.search(evt_date)
 
+        if(reg_result is None):
+            assert(False)
+
         date=reg_result.group(1)
 
         the_time=reg_result.group(2)
@@ -64,7 +59,8 @@ def date2sec(evt_date, format = "%m/%d/%Y %H:%M:%S"):
         regexp=re.compile('(.*)\\s(.*)') #store result in site
 
         reg_result=regexp.search(evt_date)
-
+        if(reg_result is None):
+            assert(False)
         date=reg_result.group(1)
 
         the_time=reg_result.group(2)
