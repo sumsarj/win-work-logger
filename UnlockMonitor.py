@@ -135,7 +135,7 @@ def main():
         end_sec=current_sec
         end_time=time.strftime('%y-%m-%d %H:%M:%S',time.localtime(current_sec))
     if start_sec == 0:
-        start_sec=end_sec-float(8*60*60)
+        start_sec=end_sec-float(12*60*60)
         start_time=time.strftime('%y-%m-%d %H:%M:%S',time.localtime(start_sec))
 
     #open event log
