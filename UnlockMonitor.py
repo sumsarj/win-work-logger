@@ -1,10 +1,12 @@
-import win32evtlog
-import winerror
-import time
+import getopt
+import os
+from pyuac import main_requires_admin
+from pyuac import isUserAdmin
 import re
 import sys
-import getopt
-from pyuac import main_requires_admin
+import time
+import win32evtlog
+import winerror
 
 
 
@@ -262,3 +264,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+    if not isUserAdmin():
+        try:
+            os.remove("pyuac.stderr.tmp.txt")
+            os.remove("pyuac.stdout.tmp.txt")
+        except:
+            sys.exit(0)
