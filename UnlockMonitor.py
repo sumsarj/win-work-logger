@@ -80,6 +80,15 @@ def date2sec(evt_date, format = "%m/%d/%Y %H:%M:%S"):
 
     return sec
 
+def printHelpText():
+    print ('\nUsage example: UnlockMonitor.py -s 08:00 -e 17:00 -d 23-10-06 -v')
+    print('Options: (all are optional)')
+    print('-s HH:MM, --start-time=HH:MM : from which time to start monitor events. Defaults 12h before end-time')
+    print('-e HH:MM, --end-time=HH:MM : from which time to stop monitor events. Defaults to current time')
+    print('-d YY-MM-DD, --date=YY-MM-DD : which date are we talking about? Defaults to today')
+    print('-v, --verbose : enable debug logging.')
+    print('-h, -?, --help : Show this help text.')
+
 @main_requires_admin
 def main():
     global debugLogging
@@ -95,42 +104,54 @@ def main():
     end_time=""
     printDebug(str(sys.argv))
 
-    opts, args = getopt.getopt(sys.argv[1:],"hvs:e:d:",["start-time=","end-time=","date=","--verbose"])
-    printDebug(args)
-    #print(opts)
-    printDebug(opts)
-    #print(str(debugLogging))
-    for opt, arg in opts:
-        if opt in ("-d", "--date"):
-            current_date=arg+" "
-            bla=date2sec(current_date+" 10:00:00","%y-%m-%d %H:%M:%S")
-            current_date_messed_up=time.strftime('%m/%d/%Y ',time.localtime(bla))
-            printDebug("#"+current_date_messed_up+current_time[0:-2]+"#")
-            current_sec=date2sec(current_date_messed_up+current_time[0:-2])
-            printDebug(current_time)
-        elif opt in ("-v", "--verbose"):
-            debugLogging=True
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],"?hvs:e:d:",["start-time=","end-time=","date=","--verbose", "--help"])
+    
 
 
-    for opt, arg in opts:
-        if opt == '-h':
-            print ('test.py -s HH:MM -e HH:MM')
-            sys.exit()
-        elif opt in ("-s", "--start-time"):
-            printDebug(arg)
-            arg+=":00"
-            bla=current_date_messed_up+arg
-            start_time=current_date+arg
-            start_sec=date2sec(bla)
-            printDebug(start_sec)
+        printDebug(args)
+        #print(opts)
+        printDebug(opts)
+        #print(str(debugLogging))
+        for opt, arg in opts:
+            if opt in ("-d", "--date"):
+                current_date=arg+" "
+                bla=date2sec(current_date+" 10:00:00","%y-%m-%d %H:%M:%S")
+                current_date_messed_up=time.strftime('%m/%d/%Y ',time.localtime(bla))
+                printDebug("#"+current_date_messed_up+current_time[0:-2]+"#")
+                current_sec=date2sec(current_date_messed_up+current_time[0:-2])
+                printDebug(current_time)
+            elif opt in ("-v", "--verbose"):
+                debugLogging=True
 
-        elif opt in ("-e", "--end-time"):
-            printDebug(arg)
-            arg+=":00"
-            bla=current_date_messed_up+arg
-            end_time=current_date+arg
-            end_sec=date2sec(bla)
-            printDebug(end_sec)
+
+        for opt, arg in opts:
+            if opt in ('-h', '--help', '-?'):
+                printHelpText()
+                sys.exit()
+            elif opt in ("-s", "--start-time"):
+                printDebug(arg)
+                arg+=":00"
+                bla=current_date_messed_up+arg
+                start_time=current_date+arg
+                start_sec=date2sec(bla)
+                printDebug(start_sec)
+
+            elif opt in ("-e", "--end-time"):
+                printDebug(arg)
+                arg+=":00"
+                bla=current_date_messed_up+arg
+                end_time=current_date+arg
+                end_sec=date2sec(bla)
+                printDebug(end_sec)
+            elif opt not in ('-d','--date','-v','--verbose'): #should catch via exception...
+                print("Unknown option: "+opt)
+                printHelpText()
+                sys.exit(0)
+    except getopt.GetoptError as e:
+        print("Error in argument list: "+str(e))
+        printHelpText()
+        sys.exit(0)
 
             
     if end_sec == 0:
